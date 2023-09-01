@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class Breadcrumb {
-    private String pageId;
+    private Long pageId;
     private String title;
 }
