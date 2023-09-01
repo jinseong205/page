@@ -14,7 +14,7 @@ public class PageService {
 
     public Optional<ParentPage> readPage(Long pageId) {
         return this.pageRepository
-                .readPage(pageId)
+                .findById(pageId)
                 .map(page -> ParentPage.builder().page(page).build());
     }
 }

@@ -5,5 +5,5 @@ import com.hello.page.application.page.domain.Page;
 import java.util.Optional;
 
 public interface PageRepository {
-    Optional<Page> readPage(Long pageId);
+    Optional<Page> findById(Long id);
 }
