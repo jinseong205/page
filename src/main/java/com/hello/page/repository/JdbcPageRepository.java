@@ -15,8 +15,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Repository
 public class JdbcPageRepository implements PageRepository {
-    private static final String SELECT_PAGE_BY_ID_SQL = """
-            SELECT id, title, content, parent_id FROM page WHERE id = :id""";
+    private static final String SELECT_PAGE_BASE_SQL = """
+            SELECT id, title, content, parent_id FROM page""";
+    private static final String SELECT_PAGE_BY_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE id = :id";
+    private static final String SELECT_PAGE_BY_PARENT_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE parent_id = :parentId";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -40,7 +42,15 @@ public class JdbcPageRepository implements PageRepository {
 
     @Override
     public List<Page> findByParentId(Long parentId) {
-        return new ArrayList<>();
+        return template.query(
+                SELECT_PAGE_BY_PARENT_ID_SQL,
+                new MapSqlParameterSource().addValue("parentId", parentId),
+                (rs, rowNum) -> Page.builder()
+                        .id(rs.getLong("id"))
+                        .title(rs.getString("title"))
+                        .content(rs.getString("content"))
+                        .parentId(rs.getLong("parent_id"))
+                        .build());
     }
 
     @Override
