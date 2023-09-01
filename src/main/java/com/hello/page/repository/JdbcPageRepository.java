@@ -60,11 +60,28 @@ public class JdbcPageRepository implements PageRepository {
     }
 
     private Page pageRowMapper(ResultSet rs, int rowNum) throws SQLException {
+        var id = rs.getLong("id");
+
+        var title = rs.getString("title");
+        if (rs.wasNull()) {
+            title = null;
+        }
+
+        var content = rs.getString("content");
+        if (rs.wasNull()) {
+            content = null;
+        }
+
+        var parentId = (Long) rs.getLong("parent_id");
+        if (rs.wasNull()) {
+            parentId = null;
+        }
+
         return Page.builder()
-                .id(rs.getLong("id"))
-                .title(rs.getString("title"))
-                .content(rs.getString("content"))
-                .parentId(rs.getLong("parent_id"))
+                .id(id)
+                .title(title)
+                .content(content)
+                .parentId(parentId)
                 .build();
     }
 }
