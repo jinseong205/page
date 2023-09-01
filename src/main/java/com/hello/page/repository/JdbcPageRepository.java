@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +30,7 @@ public class JdbcPageRepository implements PageRepository {
             var page = template.queryForObject(
                     SELECT_PAGE_BY_ID_SQL,
                     new MapSqlParameterSource().addValue("id", id),
-                    (rs, rowNum) -> Page.builder()
-                            .id(rs.getLong("id"))
-                            .title(rs.getString("title"))
-                            .content(rs.getString("content"))
-                            .parentId(rs.getLong("parent_id"))
-                            .build());
+                    this::pageRowMapper);
             return Optional.ofNullable(page);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -45,12 +42,7 @@ public class JdbcPageRepository implements PageRepository {
         return template.query(
                 SELECT_PAGE_BY_PARENT_ID_SQL,
                 new MapSqlParameterSource().addValue("parentId", parentId),
-                (rs, rowNum) -> Page.builder()
-                        .id(rs.getLong("id"))
-                        .title(rs.getString("title"))
-                        .content(rs.getString("content"))
-                        .parentId(rs.getLong("parent_id"))
-                        .build());
+                this::pageRowMapper);
     }
 
     @Override
@@ -61,5 +53,14 @@ public class JdbcPageRepository implements PageRepository {
     @Override
     public List<Long> findParentPageIds(Long id) {
         return new ArrayList<>();
+    }
+
+    private Page pageRowMapper(ResultSet rs, int rowNum) throws SQLException {
+        return Page.builder()
+                .id(rs.getLong("id"))
+                .title(rs.getString("title"))
+                .content(rs.getString("content"))
+                .parentId(rs.getLong("parent_id"))
+                .build();
     }
 }
