@@ -7,4 +7,5 @@ public class Page {
     private Long id;
     private String title;
     private String content;
+    private Long parentId;
 }
