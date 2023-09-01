@@ -10,9 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Repository
@@ -22,13 +23,23 @@ public class JdbcPageRepository implements PageRepository {
     private static final String SELECT_PAGE_BY_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE id = :id";
     private static final String SELECT_PAGE_BY_PARENT_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE parent_id = :parentId";
     private static final String SELECT_PAGE_WHERE_ID_IN_SQL = SELECT_PAGE_BASE_SQL + " WHERE id IN (:ids)";
+    private static final String SELECT_ANCESTORS_RECURSIVELY = """
+            WITH RECURSIVE child_page(id, parent_id) AS (
+              SELECT id, parent_id FROM page
+              WHERE id = :id
+              UNION ALL
+              SELECT page.id, page.parent_id FROM page
+              JOIN child_page ON page.id = child_page.parent_id
+            )
+            SELECT * FROM child_page;
+            """;
 
     private final NamedParameterJdbcTemplate template;
 
     @Override
     public Optional<Page> findById(Long id) {
         try {
-            var page = template.queryForObject(
+            var page = this.template.queryForObject(
                     SELECT_PAGE_BY_ID_SQL,
                     new MapSqlParameterSource().addValue("id", id),
                     this::pageRowMapper);
@@ -40,7 +51,7 @@ public class JdbcPageRepository implements PageRepository {
 
     @Override
     public List<Page> findByParentId(Long parentId) {
-        return template.query(
+        return this.template.query(
                 SELECT_PAGE_BY_PARENT_ID_SQL,
                 new MapSqlParameterSource().addValue("parentId", parentId),
                 this::pageRowMapper);
@@ -48,7 +59,7 @@ public class JdbcPageRepository implements PageRepository {
 
     @Override
     public List<Page> findAllById(Iterable<Long> ids) {
-        return template.query(
+        return this.template.query(
                 SELECT_PAGE_WHERE_ID_IN_SQL,
                 new MapSqlParameterSource().addValue("ids", ids),
                 this::pageRowMapper);
@@ -56,7 +67,27 @@ public class JdbcPageRepository implements PageRepository {
 
     @Override
     public List<Long> findParentPageIds(Long id) {
-        return new ArrayList<>();
+        var parentIdById = this.template.query(
+                        SELECT_ANCESTORS_RECURSIVELY,
+                        new MapSqlParameterSource().addValue("id", id),
+                        (rs, rowNum) -> {
+                            var parentId = (Long) rs.getLong("parent_id");
+                            if (rs.wasNull()) {
+                                parentId = null;
+                            }
+                            return new IdParentId(rs.getLong("id"), parentId);
+                        })
+                .stream()
+                .collect(Collectors.toMap(
+                        IdParentId::id,
+                        idParentId -> Optional.ofNullable(idParentId.parentId())));
+        var parentIds = new LinkedList<Long>();
+        var parentId = parentIdById.get(id);
+        while (parentId != null && parentId.isPresent()) {
+            parentIds.add(parentId.get());
+            parentId = parentIdById.get(parentId.get());
+        }
+        return parentIds;
     }
 
     private Page pageRowMapper(ResultSet rs, int rowNum) throws SQLException {
@@ -83,5 +114,8 @@ public class JdbcPageRepository implements PageRepository {
                 .content(content)
                 .parentId(parentId)
                 .build();
+    }
+
+    private record IdParentId(Long id, Long parentId) {
     }
 }

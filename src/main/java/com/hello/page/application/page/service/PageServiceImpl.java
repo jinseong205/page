@@ -8,8 +8,6 @@ import com.hello.page.application.page.outboundport.PageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,7 +25,7 @@ public class PageServiceImpl implements PageService {
                 .map(page -> {
                     var subPages = this.pageRepository.findByParentId(page.getId());
 
-                    var parentPageIds = this.findParentPageIds(page);
+                    var parentPageIds = this.pageRepository.findParentPageIds(page.getId());
                     var parentPageMap = this.pageRepository
                             .findAllById(parentPageIds)
                             .stream()
@@ -53,18 +51,5 @@ public class PageServiceImpl implements PageService {
                             .breadcrumbs(breadcrumbs)
                             .build();
                 });
-    }
-
-    private List<Long> findParentPageIds(Page page) {
-        var parentIds = new LinkedList<Long>();
-        var parentId = page.getParentId();
-        while (parentId != null) {
-            parentIds.add(parentId);
-            parentId = this.pageRepository
-                    .findById(parentId)
-                    .map(Page::getParentId)
-                    .orElse(null);
-        }
-        return parentIds;
     }
 }
