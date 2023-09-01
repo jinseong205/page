@@ -1,6 +1,6 @@
 package com.hello.page.web;
 
-import com.hello.page.application.page.service.PageService;
+import com.hello.page.application.page.inboundport.PageService;
 import com.hello.page.web.response.BreadcrumbResponse;
 import com.hello.page.web.response.PageResponse;
 import com.hello.page.web.response.ParentPageResponse;

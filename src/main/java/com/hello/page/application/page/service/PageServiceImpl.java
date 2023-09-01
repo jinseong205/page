@@ -3,6 +3,7 @@ package com.hello.page.application.page.service;
 import com.hello.page.application.page.domain.Breadcrumb;
 import com.hello.page.application.page.domain.Page;
 import com.hello.page.application.page.domain.ParentPage;
+import com.hello.page.application.page.inboundport.PageService;
 import com.hello.page.application.page.outboundport.PageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,10 @@ import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
-public class PageService {
+public class PageServiceImpl implements PageService {
     private final PageRepository pageRepository;
 
+    @Override
     public Optional<ParentPage> readPage(Long pageId) {
         return this.pageRepository
                 .findById(pageId)
