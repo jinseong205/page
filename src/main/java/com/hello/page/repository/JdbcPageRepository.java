@@ -21,6 +21,7 @@ public class JdbcPageRepository implements PageRepository {
             SELECT id, title, content, parent_id FROM page""";
     private static final String SELECT_PAGE_BY_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE id = :id";
     private static final String SELECT_PAGE_BY_PARENT_ID_SQL = SELECT_PAGE_BASE_SQL + " WHERE parent_id = :parentId";
+    private static final String SELECT_PAGE_WHERE_ID_IN_SQL = SELECT_PAGE_BASE_SQL + " WHERE id IN (:ids)";
 
     private final NamedParameterJdbcTemplate template;
 
@@ -47,7 +48,10 @@ public class JdbcPageRepository implements PageRepository {
 
     @Override
     public List<Page> findAllById(Iterable<Long> ids) {
-        return new ArrayList<>();
+        return template.query(
+                SELECT_PAGE_WHERE_ID_IN_SQL,
+                new MapSqlParameterSource().addValue("ids", ids),
+                this::pageRowMapper);
     }
 
     @Override
