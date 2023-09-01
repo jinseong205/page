@@ -10,6 +10,8 @@ public interface PageRepository {
 
     List<Page> findByParentId(Long parentId);
 
+    List<Page> findAllById(Iterable<Long> ids);
+
     /**
      * 가장 가까운 부모부터 가장 먼 부모 순서대로 정렬
      */
