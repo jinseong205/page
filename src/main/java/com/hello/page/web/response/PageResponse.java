@@ -12,5 +12,5 @@ public class PageResponse {
     private String title;
     private String content;
     private List<PageResponse> subPages;
-    private List<String> breadcrumbs;
+    private List<BreadcrumbResponse> breadcrumbs;
 }
