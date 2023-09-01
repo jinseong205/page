@@ -8,7 +8,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CurrentPageResponse {
+public class ParentPageResponse {
     @JsonUnwrapped
     private PageResponse page;
     private List<PageResponse> subPages;
