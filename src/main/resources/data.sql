@@ -1,0 +1,10 @@
+INSERT INTO PAGE(title, content) VALUES ('A title', 'A content');
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('B title', 'B content', 1);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('C title', 'C content', 2);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('D title', 'D content', 3);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('E title', 'E content', 4);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('F title', 'F content', 5);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('G title', 'G content', 6);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('H title', 'H content', 7);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('I title', 'I content', 8);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('J title', 'J content', 9);
