@@ -26,8 +26,7 @@ public class PageServiceImpl implements PageService {
      * PageInfo 로부터 해당 페이지를 표현하는 Page 생성
      */
     private Page constructPageFromPageInfo(PageInfo pageInfo) {
-        // @TODO 리포지토리에서 pageInfo.id 를 parentId 로 가지는 PageInfo 목록 조회
-        var subPages = new ArrayList<PageInfo>();
+        var subPages = this.pageRepository.findByParentId(pageInfo.getId());
 
         // breadcrumbs 구성
         var breadcrumbs = this.constructBreadcrumbsFromPageInfo(pageInfo);
