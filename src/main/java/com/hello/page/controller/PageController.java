@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hello.page.dto.Page;
+import com.hello.page.dto.PageDto;
 import com.hello.page.service.PageService;
 
 @RestController
@@ -16,7 +16,7 @@ public class PageController {
 	
 	
 	@GetMapping("/page/{id}")
-    public Page getPageById(@PathVariable Long id) {
+    public PageDto getPageById(@PathVariable Long id) {
     	return pageService.getPageById(id);	
     }
 

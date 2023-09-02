@@ -6,13 +6,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
-public class Page  {
+public class PageDto  {
 
     private Long id;
     private String title;
     private String content;
     private Long parent_id;
-    private List<Page> subpages;
+    private List<PageDto> subpages;
     private List<String> breadcrumbs;
     
 }

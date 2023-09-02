@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.hello.page.dto.Page;
+import com.hello.page.dto.PageDto;
 
 @Repository
 public class PageDao {
@@ -18,41 +18,33 @@ public class PageDao {
     private JdbcTemplate jdbcTemplate;
     
     // 메인 페이지 정보 가져오기
-    public Page getPageById(Long id) {
+    public PageDto getPageById(Long id) {
         String sql = "SELECT * FROM page WHERE id = ?";
         
-        RowMapper<Page> rowMapper = new BeanPropertyRowMapper<>(Page.class);
-        Page page = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        RowMapper<PageDto> rowMapper = new BeanPropertyRowMapper<>(PageDto.class);
+        PageDto pageDto = jdbcTemplate.queryForObject(sql, rowMapper, id);
 
-        // 서브 페이지 가져오기
-        if (page != null) {
-            page.setSubpages(getSubpages(id));
-        }
-
-        // 부모페이지로 breadcrumbs 구성
-        generateBreadcrumbs(page);
-
-        return page;
+        return pageDto;
     }
 
     // 서브페이지 정보 가져오기
-    private List<Page> getSubpages(Long parentId) {
+    public List<PageDto> getSubpages(Long parentId) {
         String sql = "SELECT * FROM page WHERE parent_id = ?";
         
-        RowMapper<Page> rowMapper = new BeanPropertyRowMapper<>(Page.class);
-        List<Page> subpages = jdbcTemplate.query(sql, rowMapper, parentId);
+        RowMapper<PageDto> rowMapper = new BeanPropertyRowMapper<>(PageDto.class);
+        List<PageDto> subpages = jdbcTemplate.query(sql, rowMapper, parentId);
 
         return subpages;
     }
 
     // 페이지의 breadcrumbs 생성
-    private void generateBreadcrumbs(Page page) {
+    public void generateBreadcrumbs(PageDto page) {
         
     	Long parentId = page.getParent_id();
         Deque<String> breadcrumbs = new LinkedList<>();
         
         while (parentId != null) {
-            Page parentPage = getPageById(parentId);
+            PageDto parentPage = getPageById(parentId);
             if (parentPage != null) {
             	breadcrumbs.addFirst(parentPage.getTitle());
                 parentId = parentPage.getParent_id();

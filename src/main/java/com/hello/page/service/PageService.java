@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hello.page.dao.PageDao;
-import com.hello.page.dto.Page;
+import com.hello.page.dto.PageDto;
 
 @Service
 @RestController
@@ -16,8 +16,20 @@ public class PageService {
     private PageDao pageDao;
 
 	@Transactional(readOnly = true)
-    public Page getPageById(Long id) {
-    	return pageDao.getPageById(id);	
+    public PageDto getPageById(Long id) {
+    	
+		PageDto pageDto = pageDao.getPageById(id);
+		
+        // 서브 페이지 가져오기
+        if (pageDto != null) {
+        	pageDto.setSubpages(pageDao.getSubpages(id));
+        }
+
+        // 부모페이지로 breadcrumbs 구성
+        pageDao.generateBreadcrumbs(pageDto);
+
+		return pageDto;	
+    	
     }
 
 
