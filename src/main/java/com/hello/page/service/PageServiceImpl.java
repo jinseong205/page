@@ -18,8 +18,7 @@ public class PageServiceImpl implements PageService {
 
     @Override
     public Optional<Page> readPage(Long pageId) {
-        // @TODO 리포지토리에서 pageId 에 해당하는 Optional<PageInfo> 조회
-        return Optional.<PageInfo>empty()
+        return this.pageRepository.findById(pageId)
                 .map(this::constructPageFromPageInfo);
     }
 
