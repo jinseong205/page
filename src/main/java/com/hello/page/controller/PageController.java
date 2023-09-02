@@ -18,7 +18,11 @@ public class PageController {
 
     @GetMapping("/{pageId}")
     public ResponseEntity<Object> findPage(@PathVariable("pageId") Long pageId) {
-        FindPageResponse findPageResponse = pageService.findPage(pageId);
-        return ResponseEntity.status(HttpStatus.OK).body(findPageResponse);
+        try {
+            FindPageResponse findPageResponse = pageService.findPage(pageId);
+            return ResponseEntity.status(HttpStatus.OK).body(findPageResponse);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }
