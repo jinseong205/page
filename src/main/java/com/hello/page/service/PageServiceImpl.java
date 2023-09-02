@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,10 +44,19 @@ public class PageServiceImpl implements PageService {
      * 가장 먼 조상 -> 가장 가까운 조상 순서로 표현하는 List<Breadcrumb> 생성
      */
     private List<Breadcrumb> constructBreadcrumbsFromPageInfo(PageInfo pageInfo) {
-        // @TODO 구현
-        // 1. 리포지토리에서 부모 페이지 아이디 목록 조회 (재귀 쿼리)
-        // 2. 리포지토리에서 부모 페이지의 PageInfo 목록 조회 (WHERE id IN)
-        // 3. 조회한 결과로 List<Breadcrumb> 구성
-        return new ArrayList<>();
+        // 부모 페이지 아이디 목록 조회
+        var ids = pageRepository.findParentPageIds(pageInfo.getId());
+
+        // 부모 페이지 목록 구성
+        var pageInfos = pageRepository.findAllById(ids);
+        // 페이지 목록을 "가까운 부모 -> 먼 부모"를 역순 변환
+        Collections.reverse(pageInfos);
+
+        return pageInfos.stream()
+                .map(page -> Breadcrumb.builder()
+                        .pageId(page.getId())
+                        .title(page.getTitle())
+                        .build())
+                .toList();
     }
 }
