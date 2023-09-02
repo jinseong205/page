@@ -10,4 +10,5 @@ public class CreatePageRequest {
     private String title;
     private String contents;
     private boolean isRoot;
+    private Long parrentPageId;
 }
