@@ -14,18 +14,19 @@ import java.util.List;
 public class PageService {
     private final PageRepository pageRepository;
 
-    public FindPageResponse findPage(Long pageId) {
+    public FindPageResponse findPage(Long pageId) throws RuntimeException {
+        // 현재 페이지
+        Page now = pageRepository.findByPageId(pageId)
+                .orElseThrow(RuntimeException::new);
+
         // 서브 페이지 조회
         List<Page> subPages = pageRepository.findByParentPageId(pageId);
         // 루트까지 모든 페이지 조회
         List<Page> pageList = pageRepository.findAllByPageId(pageId);
 
-        // 현재 페이지
-        Page now = pageList.get(0);
         // 브로드 크럼스 만들기
         Collections.reverse(pageList);
         List<String> breadcrumbs = pageList.stream()
-                .filter(page -> !page.getPageId().equals(now.getPageId()))
                 .map(Page::getTitle)
                 .toList();
 
