@@ -46,9 +46,8 @@ public class PageServiceImpl implements PageService {
     private List<Breadcrumb> constructBreadcrumbsFromPageInfo(PageInfo pageInfo) {
         // 부모 페이지 아이디 목록 조회
         var ids = pageRepository.findParentPageIds(pageInfo.getId());
-
         // 부모 페이지 목록 구성
-        var pageInfos = pageRepository.findAllById(ids);
+        var pageInfos = new ArrayList<>(pageRepository.findAllById(ids));
         // 페이지 목록을 "가까운 부모 -> 먼 부모"를 역순 변환
         Collections.reverse(pageInfos);
 
