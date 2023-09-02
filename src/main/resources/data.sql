@@ -8,3 +8,5 @@ INSERT INTO PAGE(title, content, parent_page_id) VALUES ('G title', 'G content',
 INSERT INTO PAGE(title, content, parent_page_id) VALUES ('H title', 'H content', 7);
 INSERT INTO PAGE(title, content, parent_page_id) VALUES ('I title', 'I content', 8);
 INSERT INTO PAGE(title, content, parent_page_id) VALUES ('J title', 'J content', 9);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('K title', 'K content', 9);
+INSERT INTO PAGE(title, content, parent_page_id) VALUES ('L title', 'L content', 9);
