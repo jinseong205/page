@@ -26,7 +26,7 @@ public class PageService {
         }
 
         // 부모페이지로 breadcrumbs 구성
-        pageDao.generateBreadcrumbs(pageDto);
+        pageDto.setBreadcrumbs(pageDao.getBreadcrumbs(pageDto));
 
 		return pageDto;	
     	

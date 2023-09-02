@@ -38,9 +38,9 @@ public class PageDao {
     }
 
     // 페이지의 breadcrumbs 생성
-    public void generateBreadcrumbs(PageDto page) {
+    public List<String> getBreadcrumbs(PageDto pageDto) {
         
-    	Long parentId = page.getParent_id();
+    	Long parentId = pageDto.getParent_id();
         Deque<String> breadcrumbs = new LinkedList<>();
         
         while (parentId != null) {
@@ -50,7 +50,7 @@ public class PageDao {
                 parentId = parentPage.getParent_id();
             }
         }
+        return (List)breadcrumbs;
 
-        page.setBreadcrumbs((List)breadcrumbs);
     }
 }
