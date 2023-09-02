@@ -1,5 +1,7 @@
 package com.hello.page.service;
 
+import com.hello.page.TestData;
+import com.hello.page.domain.PageInfo;
 import com.hello.page.repository.PageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +29,25 @@ class PageServiceImplTest {
     @Test
     @DisplayName("존재하는 페이지를 조회하면 해당 페이지 정보를 담은 Optional<Page> 를 반환한다.")
     void readExistingPage() {
-        // @TODO readPage 완성 이후 테스트 작성
-        // mock 데이터는 controller 테스트에서 사용했던 데이터 재활용
+        // given
+        var testData = new TestData();
+        var ancestorPageIds = testData.ancestorPages.stream().map(PageInfo::getId).toList();
+        when(this.pageRepository.findById(testData.pageInfo.getId()))
+                .thenReturn(Optional.of(testData.pageInfo));
+        when(this.pageRepository.findByParentId(testData.pageInfo.getId()))
+                .thenReturn(testData.subPages);
+        when(this.pageRepository.findParentPageIds(testData.pageInfo.getId()))
+                .thenReturn(ancestorPageIds);
+        when(this.pageRepository.findAllById(ancestorPageIds))
+                .thenReturn(testData.ancestorPages);
+
+        // when
+        var result = this.pageService.readPage(testData.pageInfo.getId());
+
+        // then
+        assertThat(result.isPresent()).isTrue();
+        var readPage = result.get();
+        assertThat(readPage).isEqualTo(testData.page);
     }
 
     @Test
