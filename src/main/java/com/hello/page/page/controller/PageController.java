@@ -21,14 +21,22 @@ public class PageController {
         Page page = pageService.createPage(
                 createPageRequest.getTitle(),
                 createPageRequest.getContents(),
-                createPageRequest.isRoot());
-        return ResponseEntity.ok(new CreatePageResponse(page));
+                createPageRequest.isRoot(),
+                createPageRequest.getParrentPageId());
+        return ResponseEntity.ok(new CreatePageResponse(page, pageService.getSubPage(page.getSubPageList())));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> readPage(@PathVariable Long id){
-        Page page = pageService.getPage(id);
-        return ResponseEntity.ok(new CreatePageResponse(page));
+        Page page = pageService.getPageById(id);
+        return ResponseEntity.ok(new CreatePageResponse(page, pageService.getSubPage(page.getSubPageList())));
+    }
+
+
+    @PostMapping("/test")
+    public ResponseEntity<Object> createDummyPage(){
+        pageService.createDummyPageDatas();
+        return ResponseEntity.ok().build();
     }
 
 

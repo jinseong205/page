@@ -10,15 +10,17 @@ public class CreatePageResponse {
     private Long id;
     private String title;
     private String contents;
-    private ArrayList<Page> breadCrumbs;
+    private String breadCrumbs;
     private ArrayList<Page> subPageList;
 
-    public CreatePageResponse(Page page){
+    public CreatePageResponse(Page page, ArrayList<Page> subPageList){
         this.id = page.getId();
         this.title = page.getTitle();
         this.contents = page.getContents();
-        this.breadCrumbs = page.getBreadCrumbs();
-        this.subPageList = page.getSubPageList();
+        this.breadCrumbs = "";
+        for(String pageBreadCrumbs: page.getBreadCrumbs()){
+            this.breadCrumbs += pageBreadCrumbs;
+        }
+        this.subPageList = subPageList;
     }
-
 }
