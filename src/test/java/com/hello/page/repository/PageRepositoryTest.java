@@ -20,11 +20,11 @@ class PageRepositoryTest {
     @DisplayName("id를 기준으로 페이지를 조회한다.")
     void findByIdTest() {
         Optional<PageInfo> pageInfoOptional = pageRepository.findById(1L);
-        assertThat(pageInfoOptional.isPresent()).isFalse();
+        assertThat(pageInfoOptional.isPresent()).isTrue();
     }
 
     @Test
-    @DisplayName("id 목록을 기준으로 서브 페이지 목록을 조회한다.")
+    @DisplayName("id 를 기준으로 서브 페이지 목록을 조회한다.")
     void findByParentIdTest() {
         List<PageInfo> pageInfos = pageRepository.findByParentId(91L);
         assertThat(pageInfos.size() == 3).isTrue();
