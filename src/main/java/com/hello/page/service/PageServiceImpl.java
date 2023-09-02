@@ -3,14 +3,19 @@ package com.hello.page.service;
 import com.hello.page.domain.Breadcrumb;
 import com.hello.page.domain.Page;
 import com.hello.page.domain.PageInfo;
+import com.hello.page.repository.PageRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class PageServiceImpl implements PageService {
+    private final PageRepository pageRepository;
+
     @Override
     public Optional<Page> readPage(Long pageId) {
         // @TODO 리포지토리에서 pageId 에 해당하는 Optional<PageInfo> 조회
@@ -34,7 +39,6 @@ public class PageServiceImpl implements PageService {
                 .breadcrumbs(breadcrumbs)
                 .build();
     }
-
 
     /**
      * PageInfo 로부터 해당 페이지의 모든 조상 페이지를
