@@ -69,12 +69,10 @@ public class PageService {
 
     public ArrayList<Page> getSubPage(ArrayList<Long> subPageIdList){
         ArrayList<Page> subPageList = new ArrayList<>();
-        System.out.println("A");
         for (Long subPageId: subPageIdList) {
             Page subPage = this.getPageById(subPageId);
             subPageList.add(subPage);
         }
-        System.out.println("B");
         return subPageList;
     }
 }
