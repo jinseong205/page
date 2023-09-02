@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,8 +55,14 @@ public class PageRepository {
     }
 
     public List<PageInfo> findAllById(Iterable<Long> ids) {
-        MapSqlParameterSource param = new MapSqlParameterSource().addValue("ids", ids);
-        return template.query(SELECT_PAGE_WHERE_ID_IN_SQL, param, this::pageRowMapper);
+        List<PageInfo> pageInfos = new ArrayList<>();
+
+        if (ids.iterator().hasNext()) {
+            MapSqlParameterSource param = new MapSqlParameterSource().addValue("ids", ids);
+            pageInfos = template.query(SELECT_PAGE_WHERE_ID_IN_SQL, param, this::pageRowMapper);
+        }
+
+        return pageInfos;
     }
 
     public List<Long> findParentPageIds(Long id) {
@@ -69,9 +76,6 @@ public class PageRepository {
 
     private PageInfo pageRowMapper(ResultSet rs, int rowNum) throws SQLException {
         Long id = rs.getLong("id");
-        if (rs.wasNull()) {
-            id = null;
-        }
         String title = rs.getString("title");
         if (rs.wasNull()) {
             title = null;
