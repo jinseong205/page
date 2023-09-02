@@ -23,13 +23,6 @@ public class PageRepositoryImpl implements PageRepository {
     }
 
     @Override
-    public Optional<Page> findByPageId(Long pageId) {
-        String sql = "SELECT * FROM page WHERE page_id = ?";
-        Page page = jdbcTemplate.queryForObject(sql, rowMapper, pageId);
-        return Optional.ofNullable(page);
-    }
-
-    @Override
     public List<Page> findByParentPageId(Long parentPageId) {
         String sql = "SELECT * FROM page WHERE parent_page_id = ?";
         return jdbcTemplate.query(sql, rowMapper, parentPageId);
@@ -38,18 +31,19 @@ public class PageRepositoryImpl implements PageRepository {
     @Override
     public List<Page> findAllByPageId(Long pageId) {
         String sql = """
-                WITH CHILD(PAGE_ID, TITLE, PARENT_PAGE_ID) AS (
-                  SELECT PAGE_ID, TITLE, PARENT_PAGE_ID
+                WITH CHILD(PAGE_ID, TITLE, CONTENT, PARENT_PAGE_ID) AS (
+                  SELECT PAGE_ID, TITLE, CONTENT, PARENT_PAGE_ID
                   FROM PAGE
                   WHERE PAGE_ID = ?
                   UNION ALL
-                  SELECT P.PAGE_ID, P.TITLE, P.PARENT_PAGE_ID
+                  SELECT P.PAGE_ID, P.TITLE, P.CONTENT, P.PARENT_PAGE_ID
                   FROM CHILD C
                   INNER JOIN PAGE P ON C.PARENT_PAGE_ID = P.PAGE_ID
                 )
                 SELECT *
                 FROM CHILD;
                 """;
+
         return jdbcTemplate.query(sql, rowMapper, pageId);
     }
 }
