@@ -23,7 +23,7 @@ public class InitDataRunner {
     private final NamedParameterJdbcTemplate template;
     private final KeyHolder keyHolder = new GeneratedKeyHolder();
 
-    private final int final_level = 5;
+    private final int finalLevel = 5;
 
     @PostConstruct
     public void initData() {
@@ -34,7 +34,7 @@ public class InitDataRunner {
                 })
                 .toList();
 
-        for (int level = 2; level <= final_level; level++) {
+        for (int level = 2; level <= finalLevel; level++) {
             List<TagId> nowLevelIds = new LinkedList<>();
             for (TagId tagId : preLevelIds) {
                 String parentTag = tagId.tag;
