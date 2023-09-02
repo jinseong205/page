@@ -33,4 +33,11 @@ public class PageController {
     }
 
 
+    @PostMapping("/test")
+    public ResponseEntity<Object> createDummyPage(){
+        pageService.createDummyPageDatas();
+        return ResponseEntity.ok().build();
+    }
+
+
 }

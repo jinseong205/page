@@ -28,11 +28,23 @@ public class PageService {
         }
     }
 
-    private void createDummyPageDatas(){
+    public void createDummyPageDatas(){
         String title = "페이지 제목";
         String contents = "페이지 내용";
         Page rootPage = this.createRootPage("root"+title, "root"+contents);
+        Page depth1SubPage = this.createSubPage(rootPage, "깊이1"+title, "깊이1"+contents);
+        Page depth2SubPage = this.createSubPage(depth1SubPage, "깊이2"+title, "깊이2"+contents);
 
+        for(int i=0; i <2; i++){
+            this.createSubPage(rootPage, "깊이1"+title, "깊이1"+contents);
+        }
+
+        for(int i=0; i < 2; i++){
+            this.createSubPage(depth1SubPage, "깊이2"+title, "깊이2"+contents);
+        }
+        for(int i=0; i < 2; i++){
+            this.createSubPage(depth2SubPage, "깊이3"+title, "깊이3"+contents);
+        }
     }
     private Page createRootPage(String title, String contents){
         Page page = new Page();
