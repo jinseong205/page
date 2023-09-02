@@ -8,3 +8,4 @@ CREATE TABLE page
     parent_id BIGINT,
     FOREIGN KEY (parent_id) REFERENCES page (id)
 );
+CREATE INDEX page_by_parent_id ON page (parent_id);
