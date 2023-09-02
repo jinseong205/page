@@ -36,7 +36,7 @@ public class PageDao {
     }
 
     // 서브페이지 정보 가져오기
-    public List<Page> getSubpages(Long parentId) {
+    private List<Page> getSubpages(Long parentId) {
         String sql = "SELECT * FROM page WHERE parent_id = ?";
         
         RowMapper<Page> rowMapper = new BeanPropertyRowMapper<>(Page.class);
