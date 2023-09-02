@@ -7,10 +7,11 @@ import com.hello.page.repository.PageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -44,17 +45,24 @@ public class PageServiceImpl implements PageService {
      * 가장 먼 조상 -> 가장 가까운 조상 순서로 표현하는 List<Breadcrumb> 생성
      */
     private List<Breadcrumb> constructBreadcrumbsFromPageInfo(PageInfo pageInfo) {
-        // 부모 페이지 아이디 목록 조회
-        var ids = pageRepository.findParentPageIds(pageInfo.getId());
-        // 부모 페이지 목록 구성
-        var pageInfos = new ArrayList<>(pageRepository.findAllById(ids));
-        // 페이지 목록을 "가까운 부모 -> 먼 부모"를 역순 변환
-        Collections.reverse(pageInfos);
-
-        return pageInfos.stream()
-                .map(page -> Breadcrumb.builder()
-                        .pageId(page.getId())
-                        .title(page.getTitle())
+        var parentPageIds = this.pageRepository.findParentPageIds(pageInfo.getId());
+        var parentPageInfoById = this.pageRepository
+                .findAllById(parentPageIds)
+                .stream()
+                .collect(Collectors.toMap(PageInfo::getId, Function.identity()));
+        var parentPageCount = parentPageIds.size();
+        return IntStream.range(0, parentPageCount)
+                .map(i -> parentPageCount - 1 - i)
+                .mapToObj(parentPageIds::get)
+                .map(parentPageInfoById::get)
+                .peek(parentPageInfo -> {
+                    if (parentPageInfo == null) {
+                        throw new IllegalStateException("부모 페이지 중 찾을 수 없는 것이 있습니다.");
+                    }
+                })
+                .map(parentPageInfo -> Breadcrumb.builder()
+                        .pageId(parentPageInfo.getId())
+                        .title(parentPageInfo.getTitle())
                         .build())
                 .toList();
     }
