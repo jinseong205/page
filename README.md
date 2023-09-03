@@ -2,7 +2,7 @@
 원티드프리온보딩 BE-8팀 - PageApi 과제
 ## 개요
 
- Page 과제 구현 과제를 개인 별로 구현 후 회의를 통해 하나의 과제로 통합하였다.
+ Page 과제 구현 과제를 개인 별로 구현 후 회의를 통해 하나의 과제로 통합하였다.  
 가장 중요한 것은 자식 Page 가져오기와 breadCrumbs 도출하기가 명확한 목표였다.
 
 ## **[depth = n , repo 기준 시간 복잡도 구성]**
@@ -47,7 +47,6 @@ Long parentId FK "Page의 부모 Page Id"
 ### 결론
 
 ---
-
 최대 depth라는 제약사항이 없는 상황에서,
 
 1) 쿼리의 시간
@@ -58,7 +57,8 @@ Long parentId FK "Page의 부모 Page Id"
 
 4) 공간 복잡도
 
-위의 4개를 고려한 결과 page entity에서 id와 parent_id만 재귀쿼리를 통해 도출해내는 것이 가장 효율적인 방법이다.
+위의 4개를 고려한 결과,  
+page entity에서 id와 parent_id만 재귀쿼리를 통해 도출해내는 것이 가장 효율적인 방법이다.
 
 ---
 
@@ -91,18 +91,21 @@ String[] breadCrumbs " root 부모 순으로 가지는 breadCrumbs"
 
 자식의 개수 = n이라고 했을 때, 
 
-Query : Select * from page where id = ?;
-따라서  n번의 쿼리를 통해 가져올 수 있다.
+Query : Select * from page where id = ?;  
+따라서  n번의 쿼리를 통해 가져올 수 있다.  
 
-→ select * from page where parrent_id = ?;
+→ 
 
-쿼리를 변경하여 1번의 쿼리를 통해 가져올 수 있게 최적화 할 수 있다.
+select * from page where parrent_id = ?;
 
+쿼리를 변경하여 1번의 쿼리를 통해 가져올 수 있게 최적화 할 수 있고,  
+이렇게 변경한다면, subPageList 컬럼 자체를 삭제해도 괜찮다.
 ### breadCrumbs 도출하기
 
 ---
 
-subPage를 생성 시 parentPage의 breadCrumbs를 읽어 String List에 추가하고, 마지막으로 자기 자신을 추가해 놓은 상태로 저장한다.
+subPage를 생성 시 parentPage의 breadCrumbs를 읽어 String List에 추가하고,  
+마지막으로 자기 자신을 추가해 놓은 상태로 저장한다.
 
 따라서 Read 속도는 O(1)이다.
 
@@ -116,9 +119,9 @@ breadCrumbs 구하는 시간이 빠르다.
 
 ---
 
-중간 page의 title이 수정되거나 삭제된다면,
-그 아래의 모든 자식들의 breadCrumbs를 수정해야하는 단점이 생긴다.
-이렇게 구현하려면 삽입, 수정, 삭제가 자유롭지 못한 구조에 적용해야한다.
+중간 page의 title이 수정되거나 삭제된다면,  
+그 아래의 모든 자식들의 breadCrumbs를 수정해야하는 단점이 생긴다.  
+이렇게 구현하려면 삽입, 수정, 삭제가 자유롭지 못한 구조에 적용해야한다.  
 
 그런 제약사항이 없었기 때문에 이 구조를 채택할 수는 없었다.
 
@@ -146,7 +149,7 @@ Long parentId FK "Page의 부모 Page Id"
 
 ---
 
-Query : Select * from page where parent_id = ?;
+Query : Select * from page where parent_id = ?;  
 따라서 O(1)의 시간을 통해 가져올 수 있다.
 
 ### breadCrumbs 도출하기
@@ -201,7 +204,7 @@ Long parentPageId FK "Page의 부모 Page Id"
 
 ---
 
-Query : Select * from page where parent_id = ?;
+Query : Select * from page where parent_id = ?;  
 따라서 O(1)의 시간을 통해 가져올 수 있다.
 
 ### breadCrumbs 도출하기
@@ -225,7 +228,7 @@ String sql = """
                 """;
 ```
 
-데이터베이스 내에서 부모 페이지를 재귀적으로 호출하여 저장 하여 리스트에 저장 한다.
+데이터베이스 내에서 부모 페이지를 재귀적으로 호출하여 저장 하여 리스트에 저장 한다.  
 해당 리스트를 역순으로 정렬하여 리스트를 반환한다.
 
 ### 단순 재귀 쿼리 테스트 ( 10000개의 데이터 10000개의 depth)
@@ -271,7 +274,7 @@ Long parentId FK "Page의 부모 Page Id"
 
 ---
 
-Query : Select * from page where parent_id = ?;
+Query : Select * from page where parent_id = ?;  
 따라서 O(1)의 시간을 통해 가져올 수 있다.
 
 ### breadCrumbs 도출하기
