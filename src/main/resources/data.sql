@@ -1,8 +1,7 @@
-INSERT INTO page (title, content, parent_id) VALUES
-    ('메인', '메인페이지', NULL),    --1
-    ('서브 1', '서브페이지 1', 1),    --2
-    ('서브 2', '서브페이지 2', 1),    --3
-    ('서브 1-1', '서브페이지 1-1', 2),    --4
-    ('서브 1-2', '서브페이지 1-2', 2),    --5
-    ('서브 1-1-1', '서브 1-1-1', 4),    --6
-    ('서브 1-1-2', '서브 1-1-2', 4);    --7
+-- 루트 페이지 생성
+INSERT INTO page (title, content, parent_id) VALUES ('A', 'A', NULL);
+
+-- 999개의 자식 페이지 생성
+INSERT INTO page (title, content, parent_id)
+SELECT 'A' || ROWNUM, 'A' || ROWNUM, CASE WHEN ROWNUM = 1 THEN NULL ELSE ROWNUM END
+FROM SYSTEM_RANGE(1, 9999);
