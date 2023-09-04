@@ -21,14 +21,13 @@
 
 ```mermaid
 erDiagram
-Page {
-type field_name  "설명"
-Long id PK "Page의 id값"
-String title "Page의 제목"
-String content "Page의 내용"
-Long parentId FK "Page의 부모 Page Id"
-}
-
+    Page {
+        Long id PK "Page의 id값"
+        String title "Page의 제목"
+        String content "Page의 내용"
+        Long parentId FK "Page의 부모 Page의 id"
+    }
+    Page |o--o{ Page: parent-has-children
 ```
 
 ### 결과정보
