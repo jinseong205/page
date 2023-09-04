@@ -33,14 +33,21 @@ Long parentId FK "Page의 부모 Page Id"
 
 ### 결과정보
 
-```java
+```json
 {
-	"id": 6,
-    "title": "서브 1-1-1",
-    "content": "서브 1-1-1",
-    "parentId": 4,
-    "subPages": [ 6, 7 ],
-    "breadcrumbs": [ "메인", "서브 1", "서브 1-1" ]
+  "id": 6,
+  "title": "서브 1-1-1",
+  "content": "서브 1-1-1",
+  "parentId": 4,
+  "subPages": [
+    6,
+    7
+  ],
+  "breadcrumbs": [
+    "메인",
+    "서브 1",
+    "서브 1-1"
+  ]
 }
 ```
 
