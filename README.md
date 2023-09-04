@@ -203,7 +203,7 @@ BreadCrumbs의 호출 시간 복잡도가 O(n)으로 조회가 비교적 더 소
 단 테스트 진행시 내장 h2-db를 사용했을 때는 소요시간이 큰 차이를 내지 않는것으로 확인하였는데 실제 운영 데이터베이스를 사용 할 경우 더 소요될것으로 예상 되어 재귀 호출 하는 방식으로 결정하였다.
 
 
-<img width="386" alt="image" src="https://github.com/daengdaengLee/until/assets/57009926/e5467bc0-1f56-474a-8140-79ea9ab300f4">
+<img width="386" alt="image" src="https://github.com/jinseong205/page/assets/57009926/1aad926f-0551-4bd8-ad5f-338facc63bc1">
 
 
 ## 상민
