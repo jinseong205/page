@@ -10,7 +10,7 @@
 - 자식 page 가져오기 : O(1)
 - breadCrumbs 도출하기
     - [정진성] 알고리즘 O(n) - Application 내부에서 재귀 호출
-    - [이건호] 알고리즘 O(재귀) + O(1) ids를 가지고 page들을 다시 조회
+    - [이건호] 알고리즘 O(재귀) + O(log N) ids를 가지고 page들을 다시 조회
     - [박상민]  알고리즘 O(재귀) + reverse 1회 시간복잡도 발생.
     - [최영준] 시간 복잡도 O(1)  - 페이지 생성시 breadCrumbs 같이 저장하는 방식
     
@@ -34,21 +34,35 @@ erDiagram
 
 ```json
 {
-  "id": 6,
-  "title": "서브 1-1-1",
-  "content": "서브 1-1-1",
-  "parentId": 4,
-  "subPages": [
-    6,
-    7
-  ],
-  "breadcrumbs": [
-    "메인",
-    "서브 1",
-    "서브 1-1"
-  ]
+    "id": "21",
+    "title": "ACC",
+    "content": "Hello Level3 ACC",
+    "parentId": "6",
+    "subPages": [
+        {"id": "64","title": "ACCA","content": "Hello Level4 ACCA","parentId": "21"},
+        {"id": "65","title": "ACCB","content": "Hello Level4 ACCB","parentId": "21"},
+        {"id": "66","title": "ACCC","content": "Hello Level4 ACCC","parentId": "21"}
+    ],
+    "breadcrumbs": [
+        {"pageId": "1","title": "A"},
+        {"pageId": "6","title": "AC"}
+    ]
 }
 ```
+
+### 어플리케이션 실행 방법
+
+```java
+$ ./gradlew bootRun
+```
+
+### API 호출 방법
+
+브라우저 혹은 postman을 이용하여 호출합니다.
+
+- method : `get`
+- url : `/pages/21`
+
 
 ### 결론
 
@@ -184,7 +198,13 @@ depth n일 경우 O(n)의 시간이 소요된다.
 
 BreadCrumbs의 호출 시간 복잡도가 O(n)으로 조회가 비교적 더 소요된다.
 
-또한 부모 페이지를 찾는 과정에서 매 페이지마다 DB 호출을 통해 비용을 많이 소모한다. 
+또한 부모 페이지를 찾는 과정에서 매 페이지마다 DB 호출을 통해 비용을 많이 소모한다.
+
+단 테스트 진행시 내장 h2-db를 사용했을 때는 소요시간이 큰 차이를 내지 않는것으로 확인하였는데 실제 운영 데이터베이스를 사용 할 경우 더 소요될것으로 예상 되어 재귀 호출 하는 방식으로 결정하였다.
+
+
+<img width="386" alt="image" src="https://github.com/daengdaengLee/until/assets/57009926/e5467bc0-1f56-474a-8140-79ea9ab300f4">
+
 
 ## 상민
 
